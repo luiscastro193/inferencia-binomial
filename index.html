@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<title>Inferencia binomial</title>
+		<meta name="author" content="Luis Castro Martín">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<style>
+			.contenedor {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				align-content: flex-start;
+			}
+			
+			.contenedor > * {
+				margin-right: 0.3cm;
+				margin-bottom: 0.3cm;
+			}
+			
+			input {
+				max-width: 5em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h3>Inferencia binomial</h3>
+		<section class="contenedor">
+			<table>
+				<tr><td>Éxitos</td></tr>
+				<tr><td><input id="exitos" type="number" value="0" onchange="actualizar()"></td></tr>
+			</table>
+			<table>
+				<tr><td>Fallos</td></tr>
+				<tr><td><input id="fallos" type="number" value="0" onchange="actualizar()"></td></tr>
+			</table>
+			<table>
+				<tr><td>Confianza</td></tr>
+				<tr><td><input id="confianza" type="number" value="95" onchange="actualizar()">%</td></tr>
+			</table>
+		</section>
+		<section class="contenedor">
+			<table>
+				<tr><td>Estimación</td></tr>
+				<tr><td><span id="estimacion"></span>%</td></tr>
+			</table>
+			<table>
+				<tr><td>Intervalo</td></tr>
+				<tr><td>[<span id="limInf"></span> , <span id="limSup"></span>]</td></tr>
+			</table>
+		</section>
+		<div id="grafica"></div>
+		<script>
+			var exitos = document.getElementById("exitos");
+			var fallos = document.getElementById("fallos");
+			var confianza = document.getElementById("confianza");
+			var estimacion = document.getElementById("estimacion");
+			var limInf = document.getElementById("limInf");
+			var limSup = document.getElementById("limSup");
+			var grafica = document.getElementById("grafica");
+			var alfa;
+			var beta;
+			var p;
+			var xPuntos = new Array(1001);
+			var yPuntos = new Array(1001);
+			var x;
+		
+			function actualizar(){
+				alfa = parseFloat(exitos.value) + 0.5;
+				beta = parseFloat(fallos.value) + 0.5;
+				p = (100 - confianza.value) / 100;
+				
+				estimacion.innerText = (jStat.beta.mean(alfa, beta) * 100).toFixed(2);
+				limInf.innerText = (jStat.beta.inv(p/2, alfa, beta) * 100).toFixed(2);
+				limSup.innerText = (jStat.beta.inv(1 - p/2, alfa, beta) * 100).toFixed(2);
+				
+				for (i = 0; i < 1001; i++) { 
+					x = i * 0.1;
+					xPuntos[i] = x;
+					yPuntos[i] = jStat.beta.pdf(x/100, alfa, beta);
+				}
+				
+				Plotly.newPlot(grafica, [{x: xPuntos, y: yPuntos, mode: 'lines'}], { xaxis: {range: [0, 100]} } );
+			}
+			
+			actualizar();
+		</script>
+	</body>
+</html>
