@@ -41,6 +41,10 @@
 				<tr><td>Confianza</td></tr>
 				<tr><td><input id="confianza" type="number" value="95" oninput="actualizar()">%</td></tr>
 			</table>
+			<table>
+				<tr><td>Valor</td></tr>
+				<tr><td><input id="valor" type="number" value="50" oninput="actualizar()">%</td></tr>
+			</table>
 		</section>
 		<section class="contenedor">
 			<table>
@@ -59,17 +63,28 @@
 				<tr><td>Menor que</td></tr>
 				<tr><td><span id="menor"></span>%</td></tr>
 			</table>
+			<table>
+				<tr><td>¿p &gt valor?</td></tr>
+				<tr><td><span id="vMayor"></span>%</td></tr>
+			</table>
+			<table>
+				<tr><td>¿p &lt valor?</td></tr>
+				<tr><td><span id="vMenor"></span>%</td></tr>
+			</table>
 		</section>
 		<div id="grafica"></div>
 		<script>
 			var exitos = document.getElementById("exitos");
 			var fallos = document.getElementById("fallos");
 			var confianza = document.getElementById("confianza");
+			var valor = document.getElementById("valor");
 			var estimacion = document.getElementById("estimacion");
 			var limInf = document.getElementById("limInf");
 			var limSup = document.getElementById("limSup");
 			var mayor = document.getElementById("mayor");
 			var menor = document.getElementById("menor");
+			var vMayor = document.getElementById("vMayor");
+			var vMenor = document.getElementById("vMenor");
 			var grafica = document.getElementById("grafica");
 			var alfa;
 			var beta;
@@ -90,6 +105,8 @@
 				limSup.innerText = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(2);
 				mayor.innerText = (jStat.beta.inv(1 - p, alfa, beta) * 100).toFixed(2);
 				menor.innerText = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
+				vMayor.innerText = (100 * (1 - jStat.beta.cdf(valor.value*0.01, alfa, beta))).toFixed(2);
+				vMenor.innerText = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(2);
 				
 				for (i = 0; i < 1001; i++)
 					yPuntos[i] = jStat.beta.pdf(i * 0.001, alfa, beta);
