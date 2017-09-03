@@ -44,12 +44,20 @@
 		</section>
 		<section class="contenedor">
 			<table>
+				<tr><td>Intervalo</td></tr>
+				<tr><td>[<span id="limInf"></span> , <span id="limSup"></span>]</td></tr>
+			</table>
+			<table>
 				<tr><td>Estimación</td></tr>
 				<tr><td><span id="estimacion"></span>%</td></tr>
 			</table>
 			<table>
-				<tr><td>Intervalo</td></tr>
-				<tr><td>[<span id="limInf"></span> , <span id="limSup"></span>]</td></tr>
+				<tr><td>Mayor que</td></tr>
+				<tr><td><span id="mayor"></span>%</td></tr>
+			</table>
+			<table>
+				<tr><td>Menor que</td></tr>
+				<tr><td><span id="menor"></span>%</td></tr>
 			</table>
 		</section>
 		<div id="grafica"></div>
@@ -60,6 +68,8 @@
 			var estimacion = document.getElementById("estimacion");
 			var limInf = document.getElementById("limInf");
 			var limSup = document.getElementById("limSup");
+			var mayor = document.getElementById("mayor");
+			var menor = document.getElementById("menor");
 			var grafica = document.getElementById("grafica");
 			var alfa;
 			var beta;
@@ -73,11 +83,13 @@
 			function actualizar(){
 				alfa = parseFloat(exitos.value) + 0.5;
 				beta = parseFloat(fallos.value) + 0.5;
-				p = (100 - confianza.value) / 100;
+				p = (100 - confianza.value) * 0.01;
 				
 				estimacion.innerText = (jStat.beta.mean(alfa, beta) * 100).toFixed(2);
-				limInf.innerText = (jStat.beta.inv(p/2, alfa, beta) * 100).toFixed(2);
-				limSup.innerText = (jStat.beta.inv(1 - p/2, alfa, beta) * 100).toFixed(2);
+				limInf.innerText = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(2);
+				limSup.innerText = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(2);
+				mayor.innerText = (jStat.beta.inv(1 - p, alfa, beta) * 100).toFixed(2);
+				menor.innerText = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
 				
 				for (i = 0; i < 1001; i++)
 					yPuntos[i] = jStat.beta.pdf(i * 0.001, alfa, beta);
