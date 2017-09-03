@@ -103,8 +103,8 @@
 				estimacion.innerText = (jStat.beta.mean(alfa, beta) * 100).toFixed(2);
 				limInf.innerText = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(2);
 				limSup.innerText = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(2);
-				mayor.innerText = (jStat.beta.inv(1 - p, alfa, beta) * 100).toFixed(2);
-				menor.innerText = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
+				mayor.innerText = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
+				menor.innerText = (jStat.beta.inv(1- p, alfa, beta) * 100).toFixed(2);
 				vMayor.innerText = (100 * (1 - jStat.beta.cdf(valor.value*0.01, alfa, beta))).toFixed(2);
 				vMenor.innerText = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(2);
 				
