@@ -92,6 +92,11 @@
 			var xPuntos = new Array(1001);
 			var yPuntos = new Array(1001);
 			
+			if (localStorage.exitos) exitos.value = localStorage.exitos;
+			if (localStorage.fallos) fallos.value = localStorage.fallos;
+			if (localStorage.confianza) confianza.value = localStorage.confianza;
+			if (localStorage.valor) valor.value = localStorage.valor;
+			
 			for (i = 0; i < 1001; i++)
 					xPuntos[i] = i * 0.1;
 		
@@ -112,6 +117,11 @@
 					yPuntos[i] = jStat.beta.pdf(i * 0.001, alfa, beta);
 				
 				Plotly.newPlot(grafica, [{x: xPuntos, y: yPuntos, mode: 'lines'}], { xaxis: {range: [0, 100]} } );
+				
+				localStorage.exitos = exitos.value;
+				localStorage.fallos = fallor.value;
+				localStorage.confianza = confianza.value;
+				localStorage.valor = valor.value;
 			}
 			
 			actualizar();
