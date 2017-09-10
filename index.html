@@ -97,8 +97,8 @@
 			if (localStorage.confianza) confianza.value = localStorage.confianza;
 			if (localStorage.valor) valor.value = localStorage.valor;
 			
-			for (i = 0; i < 501; i++)
-					xPuntos[i] = i * 0.2;
+			for (i = 0; i < 1001; i++)
+					xPuntos[i] = i * 0.1;
 		
 			function actualizar(){
 				alfa = parseFloat(exitos.value) + 0.5;
@@ -113,8 +113,8 @@
 				vMenor.innerText = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(2);
 				vMayor.innerText = (100 - vMenor.innerText).toFixed(2);
 				
-				for (i = 0; i < 501; i++)
-					yPuntos[i] = jStat.beta.pdf(i * 0.002, alfa, beta);
+				for (i = 0; i < 1001; i++)
+					yPuntos[i] = jStat.beta.pdf(i * 0.001, alfa, beta);
 				
 				Plotly.newPlot(grafica, [{x: xPuntos, y: yPuntos, mode: 'lines'}], { xaxis: {range: [0, 100]} } );
 				
