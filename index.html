@@ -105,13 +105,13 @@
 				beta = parseFloat(fallos.value) + 0.5;
 				p = (100 - confianza.value) * 0.01;
 				
-				estimacion.innerText = (jStat.beta.mean(alfa, beta) * 100).toFixed(2);
-				limInf.innerText = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(2);
-				limSup.innerText = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(2);
-				mayor.innerText = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
-				menor.innerText = (jStat.beta.inv(1- p, alfa, beta) * 100).toFixed(2);
-				vMenor.innerText = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(2);
-				vMayor.innerText = (100 - vMenor.innerText).toFixed(2);
+				estimacion.textContent = (jStat.beta.mean(alfa, beta) * 100).toFixed(2);
+				limInf.textContent = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(2);
+				limSup.textContent = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(2);
+				mayor.textContent = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
+				menor.textContent = (jStat.beta.inv(1- p, alfa, beta) * 100).toFixed(2);
+				vMenor.textContent = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(2);
+				vMayor.textContent = (100 - vMenor.textContent).toFixed(2);
 				
 				for (i = 0; i < 501; i++)
 					yPuntos[i] = jStat.beta.pdf(i * 0.002, alfa, beta);
