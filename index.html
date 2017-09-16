@@ -21,7 +21,7 @@
 			}
 			
 			input {
-				max-width: 5em;
+				max-width: 4em;
 			}
 		</style>
 	</head>
@@ -105,13 +105,13 @@
 				beta = parseFloat(fallos.value) + 0.5;
 				p = (100 - confianza.value) * 0.01;
 				
-				estimacion.textContent = (jStat.beta.mean(alfa, beta) * 100).toFixed(2);
-				limInf.textContent = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(2);
-				limSup.textContent = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(2);
-				mayor.textContent = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(2);
-				menor.textContent = (jStat.beta.inv(1- p, alfa, beta) * 100).toFixed(2);
-				vMenor.textContent = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(2);
-				vMayor.textContent = (100 - vMenor.textContent).toFixed(2);
+				estimacion.textContent = (jStat.beta.mean(alfa, beta) * 100).toFixed(1);
+				limInf.textContent = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(1);
+				limSup.textContent = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(1);
+				mayor.textContent = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(1);
+				menor.textContent = (jStat.beta.inv(1- p, alfa, beta) * 100).toFixed(1);
+				vMenor.textContent = (100 * jStat.beta.cdf(valor.value*0.01, alfa, beta)).toFixed(1);
+				vMayor.textContent = (100 - vMenor.textContent).toFixed(1);
 				
 				for (i = 0; i < 501; i++)
 					yPuntos[i] = jStat.beta.pdf(i * 0.002, alfa, beta);
