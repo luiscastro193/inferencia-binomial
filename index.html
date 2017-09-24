@@ -47,27 +47,27 @@
 			</table>
 		</section>
 		<section class="contenedor">
-			<table>
+			<table ondblclick="switchWeight(this)">
 				<tr><td>Intervalo</td></tr>
 				<tr><td>[<span id="limInf"></span> , <span id="limSup"></span>]</td></tr>
 			</table>
-			<table>
+			<table ondblclick="switchWeight(this)">
 				<tr><td>Estimación</td></tr>
 				<tr><td><span id="estimacion"></span>%</td></tr>
 			</table>
-			<table>
+			<table ondblclick="switchWeight(this)">
 				<tr><td>Mayor que</td></tr>
 				<tr><td><span id="mayor"></span>%</td></tr>
 			</table>
-			<table>
+			<table ondblclick="switchWeight(this)">
 				<tr><td>Menor que</td></tr>
 				<tr><td><span id="menor"></span>%</td></tr>
 			</table>
-			<table>
+			<table ondblclick="switchWeight(this)">
 				<tr><td>¿p &gt valor?</td></tr>
 				<tr><td><span id="vMayor"></span>%</td></tr>
 			</table>
-			<table>
+			<table ondblclick="switchWeight(this)">
 				<tr><td>¿p &lt valor?</td></tr>
 				<tr><td><span id="vMenor"></span>%</td></tr>
 			</table>
@@ -100,7 +100,7 @@
 			for (var i = 0; i < 501; i++)
 					xPuntos[i] = i * 0.2;
 		
-			function actualizar(){
+			function actualizar() {
 				alfa = parseFloat(exitos.value) + 0.5;
 				beta = parseFloat(fallos.value) + 0.5;
 				p = (100 - confianza.value) * 0.01;
@@ -125,6 +125,10 @@
 			}
 			
 			actualizar();
+			
+			function switchWeight(table) {
+				table.style.fontWeight = table.style.fontWeight == 'bold' ? 'normal' : 'bold';
+			}
 		</script>
 	</body>
 </html>
