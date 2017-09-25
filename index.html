@@ -47,27 +47,27 @@
 			</table>
 		</section>
 		<section class="contenedor">
-			<table ondblclick="switchWeight(this)">
+			<table id="intervaloTable" onclick="switchWeight(this)">
 				<tr><td>Intervalo</td></tr>
 				<tr><td>[<span id="limInf"></span> , <span id="limSup"></span>]</td></tr>
 			</table>
-			<table ondblclick="switchWeight(this)">
+			<table id="estimacionTable" onclick="switchWeight(this)">
 				<tr><td>Estimación</td></tr>
 				<tr><td><span id="estimacion"></span>%</td></tr>
 			</table>
-			<table ondblclick="switchWeight(this)">
+			<table id="mayorTable" onclick="switchWeight(this)">
 				<tr><td>Mayor que</td></tr>
 				<tr><td><span id="mayor"></span>%</td></tr>
 			</table>
-			<table ondblclick="switchWeight(this)">
+			<table id="menorTable" onclick="switchWeight(this)">
 				<tr><td>Menor que</td></tr>
 				<tr><td><span id="menor"></span>%</td></tr>
 			</table>
-			<table ondblclick="switchWeight(this)">
+			<table id="vMayorTable" onclick="switchWeight(this)">
 				<tr><td>¿p &gt valor?</td></tr>
 				<tr><td><span id="vMayor"></span>%</td></tr>
 			</table>
-			<table ondblclick="switchWeight(this)">
+			<table id="vMenorTable" onclick="switchWeight(this)">
 				<tr><td>¿p &lt valor?</td></tr>
 				<tr><td><span id="vMenor"></span>%</td></tr>
 			</table>
@@ -128,6 +128,13 @@
 			
 			function switchWeight(table) {
 				table.style.fontWeight = table.style.fontWeight == 'bold' ? 'normal' : 'bold';
+				localStorage[table.id] = table.style.fontWeight;
+			}
+			
+			"use strict;"
+			for (var param in localStorage) {
+				if (localStorage[param] == 'bold')
+					document.getElementById(param).style.fontWeight = 'bold';
 			}
 		</script>
 	</body>
