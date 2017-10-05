@@ -74,6 +74,7 @@
 		</section>
 		<div id="grafica"></div>
 		<script>
+			"use strict";
 			var exitos = document.getElementById("exitos");
 			var fallos = document.getElementById("fallos");
 			var confianza = document.getElementById("confianza");
@@ -140,7 +141,6 @@
 				localStorage[table.id] = table.style.fontWeight;
 			}
 			
-			"use strict";
 			for (var param in localStorage) {
 				if (localStorage[param] == 'bold')
 					document.getElementById(param).style.fontWeight = 'bold';
