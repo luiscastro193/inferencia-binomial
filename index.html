@@ -134,6 +134,14 @@
 					else
 						exitos.select();
 				}
+				else if (event.keyCode == 38 && (!document.activeElement || document.activeElement.nodeName.toLowerCase() != 'input')) {
+					exitos.value = parseInt(exitos.value) + 1;
+					actualizar();
+				}
+				else if (event.keyCode == 38 && (!document.activeElement || document.activeElement.nodeName.toLowerCase() != 'input')) {
+					fallos.value = parseInt(fallos.value) + 1;
+					actualizar();
+				}
 			});
 			
 			function switchWeight(table) {
