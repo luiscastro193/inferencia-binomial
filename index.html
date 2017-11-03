@@ -56,6 +56,10 @@
 				<tr><td>Estimación</td></tr>
 				<tr><td><span id="estimacion"></span>%</td></tr>
 			</table>
+			<table id="desviacionTable" onclick="switchWeight(this)">
+				<tr><td>Desviación</td></tr>
+				<tr><td><span id="desviacion"></span>%</td></tr>
+			</table>
 			<table id="mayorTable" onclick="switchWeight(this)">
 				<tr><td>Mayor que</td></tr>
 				<tr><td><span id="mayor"></span>%</td></tr>
@@ -81,6 +85,7 @@
 			var confianza = document.getElementById("confianza");
 			var valor = document.getElementById("valor");
 			var estimacion = document.getElementById("estimacion");
+			var desviacion = document.getElementById("estimacion");
 			var limInf = document.getElementById("limInf");
 			var limSup = document.getElementById("limSup");
 			var mayor = document.getElementById("mayor");
@@ -108,6 +113,7 @@
 				p = (100 - confianza.value) * 0.01;
 				
 				estimacion.textContent = (jStat.beta.mean(alfa, beta) * 100).toFixed(1);
+				desviacion.textContent = (Math.sqrt(jStat.beta.variance(alfa, beta)) * 100).toFixed(1);
 				limInf.textContent = (jStat.beta.inv(p*0.5, alfa, beta) * 100).toFixed(1);
 				limSup.textContent = (jStat.beta.inv(1 - p*0.5, alfa, beta) * 100).toFixed(1);
 				mayor.textContent = (jStat.beta.inv(p, alfa, beta) * 100).toFixed(1);
