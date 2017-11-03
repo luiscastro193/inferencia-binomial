@@ -47,10 +47,12 @@
 			<table id="mayorTable" onclick="switchWeight(this)">
 				<tr><td>Mayor que</td></tr>
 				<tr><td><span id="mayor"></span>%</td></tr>
+				<tr><td>(al <span id="confianzaMayor"></span>%)</td></tr>
 			</table>
 			<table id="menorTable" onclick="switchWeight(this)">
 				<tr><td>Menor que</td></tr>
 				<tr><td><span id="menor"></span>%</td></tr>
+				<tr><td>(al <span id="confianzaMenor"></span>%)</td></tr>
 			</table>
 		</section>
 		<div id="grafica"></div>
@@ -61,6 +63,8 @@
 			var estimacion = document.getElementById("estimacion");
 			var mayor = document.getElementById("mayor");
 			var menor = document.getElementById("menor");
+			var confianzaMayor = document.getElementById("confianzaMayor");
+			var confianzaMenor = document.getElementById("confianzaMenor");
 			var grafica = document.getElementById("grafica");
 			var alfa;
 			var beta;
@@ -94,6 +98,9 @@
 					mayor.textContent = (media - desviacion).toFixed();
 					menor.textContent = (media + desviacion).toFixed();
 				}
+				
+				confianzaMayor.textContent = ((1 - jStat.beta.cdf(mayor.textContent / 100, alfa, beta)) * 100).toFixed();
+				confianzaMenor.textContent = (jStat.beta.cdf(menor.textContent / 100, alfa, beta) * 100).toFixed();
 				
 				for (var i = 0; i < 501; i++)
 					yPuntos[i] = jStat.beta.pdf(i * 0.002, alfa, beta);
