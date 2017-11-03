@@ -80,20 +80,10 @@
 				beta = parseFloat(fallos.value) + 0.5;
 				media = jStat.beta.mean(alfa, beta) * 100;
 				desviacion = Math.sqrt(jStat.beta.variance(alfa, beta)) * 100;
-				estimacion.textContent = media.toFixed(1);
 				
-				if (media + desviacion >= 100) {
-					mayor.textContent = (100 - desviacion).toFixed(1);
-					menor.textContent = "100";
-				}
-				else if (media - desviacion <= 0) {
-					mayor.textContent = "0";
-					menor.textContent = desviacion.toFixed(1);
-				}
-				else {
-					mayor.textContent = (media - desviacion).toFixed(1);
-					menor.textContent = (media + desviacion).toFixed(1);
-				}
+				estimacion.textContent = media.toFixed(1);
+				mayor.textContent = Math.max(media - desviacion, 0).toFixed(1);
+				menor.textContent = Math.min(media + desviacion, 100).toFixed(1);
 				
 				for (var i = 0; i < 501; i++)
 					yPuntos[i] = jStat.beta.pdf(i * 0.002, alfa, beta);
