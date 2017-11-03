@@ -80,19 +80,19 @@
 				beta = parseFloat(fallos.value) + 0.5;
 				media = jStat.beta.mean(alfa, beta) * 100;
 				desviacion = Math.sqrt(jStat.beta.variance(alfa, beta)) * 100;
-				estimacion.textContent = media.toFixed(1);
+				estimacion.textContent = media.toFixed();
 				
 				if (media + desviacion >= 100) {
-					mayor.textContent = (100 - 2 * desviacion).toFixed(1);
+					mayor.textContent = (100 - 2 * desviacion).toFixed();
 					menor.textContent = "100";
 				}
 				else if (media - desviacion <= 0) {
 					mayor.textContent = "0";
-					menor.textContent = (2 * desviacion).toFixed(1);
+					menor.textContent = (2 * desviacion).toFixed();
 				}
 				else {
-					mayor.textContent = (media - desviacion).toFixed(1);
-					menor.textContent = (media + desviacion).toFixed(1);
+					mayor.textContent = (media - desviacion).toFixed();
+					menor.textContent = (media + desviacion).toFixed();
 				}
 				
 				for (var i = 0; i < 501; i++)
