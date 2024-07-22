@@ -25,10 +25,10 @@ function update() {
 	greater.textContent = (betaDist.quantile(.05, alpha, beta) * 100).toFixed();
 	lesser.textContent = (betaDist.quantile(.95, alpha, beta) * 100).toFixed();
 	
-	for (var i = 0; i < 501; i++)
+	for (let i = 0; i < 501; i++)
 		yPoints[i] = betaDist.pdf(i * .002, alpha, beta);
 	
-	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}], { xaxis: {range: [0, 100]} } );
+	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}], {xaxis: {range: [0, 100]}});
 	
 	localStorage.setItem("successes", successes.value);
 	localStorage.setItem("failures", failures.value);
