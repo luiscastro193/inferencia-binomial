@@ -1,140 +1,63 @@
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="utf-8">
-		<title>Inferencia binomial</title>
-		<meta name="author" content="Luis Castro Martín">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="https://luiscastro193.github.io/favicon.svg" type="image/svg+xml">
-		<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
-		<script src="https://cdn.plot.ly/plotly-latest.min.js" defer></script>
-		<script src="https://unpkg.com/jstat/dist/jstat.min.js" defer></script>
-		<style>
-			* {
-				font-family: 'Lexend', sans-serif;
-			}
-			
-			.contenedor {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: flex-start;
-				align-content: flex-start;
-			}
-			
-			.contenedor > * {
-				margin-right: 0.3cm;
-				margin-bottom: 0.3cm;
-			}
-			
-			input {
-				max-width: 4em;
-			}
-		</style>
-	</head>
-
-	<body>
-		<h3>Inferencia binomial</h3>
-		<section class="contenedor">
-			<table>
-				<tr><td>Éxitos</td></tr>
-				<tr><td><input id="exitos" type="number" value="0" oninput="actualizar()"></td></tr>
-			</table>
-			<table>
-				<tr><td>Fallos</td></tr>
-				<tr><td><input id="fallos" type="number" value="0" oninput="actualizar()"></td></tr>
-			</table>
-		</section>
-		<section class="contenedor">
-			<table id="estimacionTable" onclick="switchWeight(this)">
-				<tr><td>Estimación</td></tr>
-				<tr><td><span id="estimacion"></span>%</td></tr>
-			</table>
-			<table id="mayorTable" onclick="switchWeight(this)">
-				<tr><td>Mayor que</td></tr>
-				<tr><td><span id="mayor"></span>%</td></tr>
-				<tr><td>(al <span id="confianzaMayor"></span>%)</td></tr>
-			</table>
-			<table id="menorTable" onclick="switchWeight(this)">
-				<tr><td>Menor que</td></tr>
-				<tr><td><span id="menor"></span>%</td></tr>
-				<tr><td>(al <span id="confianzaMenor"></span>%)</td></tr>
-			</table>
-		</section>
-		<div id="grafica"></div>
-		<script>
-			"use strict";
-			var exitos = document.getElementById("exitos");
-			var fallos = document.getElementById("fallos");
-			var estimacion = document.getElementById("estimacion");
-			var mayor = document.getElementById("mayor");
-			var menor = document.getElementById("menor");
-			var confianzaMayor = document.getElementById("confianzaMayor");
-			var confianzaMenor = document.getElementById("confianzaMenor");
-			var grafica = document.getElementById("grafica");
-			var alfa;
-			var beta;
-			var media;
-			var desviacion;
-			var xPuntos = new Array(501);
-			var yPuntos = new Array(501);
-			
-			if (localStorage.exitos) exitos.value = localStorage.exitos;
-			if (localStorage.fallos) fallos.value = localStorage.fallos;
-			
-			for (var i = 0; i < 501; i++)
-				xPuntos[i] = i * 0.2;
+<head>
+	<meta charset="utf-8">
+	<title>Inferencia binomial</title>
+	<meta name="author" content="Luis Castro Martín">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="https://luiscastro193.github.io/favicon.svg" type="image/svg+xml">
+	<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta/+esm">
+	<script src="https://cdn.plot.ly/plotly-latest.min.js" defer></script>
+	<script src="main.js" type="module"></script>
+	<style>
+		* {
+			font-family: 'Lexend', sans-serif;
+		}
 		
-			function actualizar() {
-				alfa = parseFloat(exitos.value) + 0.5;
-				beta = parseFloat(fallos.value) + 0.5;
-				media = jStat.beta.mean(alfa, beta) * 100;
-				desviacion = Math.sqrt(jStat.beta.variance(alfa, beta)) * 100;
-				
-				estimacion.textContent = media.toFixed();
-				mayor.textContent = Math.max(media - desviacion, 0).toFixed();
-				menor.textContent = Math.min(media + desviacion, 100).toFixed();
-				confianzaMayor.textContent = ((1 - jStat.beta.cdf(mayor.textContent / 100, alfa, beta)) * 100).toFixed();
-				confianzaMenor.textContent = (jStat.beta.cdf(menor.textContent / 100, alfa, beta) * 100).toFixed();
-				
-				for (var i = 0; i < 501; i++)
-					yPuntos[i] = jStat.beta.pdf(i * 0.002, alfa, beta);
-				
-				Plotly.newPlot(grafica, [{x: xPuntos, y: yPuntos, mode: 'lines'}], { xaxis: {range: [0, 100]} } );
-				
-				localStorage.exitos = exitos.value;
-				localStorage.fallos = fallos.value;
-			}
-			
-			document.addEventListener("DOMContentLoaded", function() {
-				actualizar();
-			});
-			
-			document.addEventListener('keydown', function(event) {
-				if (event.keyCode == 13) {
-					if (document.activeElement && document.activeElement.nodeName.toLowerCase() == 'input')
-						document.activeElement.blur();
-					else
-						exitos.select();
-				}
-				else if (event.keyCode == 38 && (!document.activeElement || document.activeElement.nodeName.toLowerCase() != 'input')) {
-					exitos.value = parseInt(exitos.value) + 1;
-					actualizar();
-				}
-				else if (event.keyCode == 40 && (!document.activeElement || document.activeElement.nodeName.toLowerCase() != 'input')) {
-					fallos.value = parseInt(fallos.value) + 1;
-					actualizar();
-				}
-			});
-			
-			function switchWeight(table) {
-				table.style.fontWeight = table.style.fontWeight == 'bold' ? 'normal' : 'bold';
-				localStorage[table.id] = table.style.fontWeight;
-			}
-			
-			for (var param in localStorage) {
-				if (localStorage[param] == 'bold')
-					document.getElementById(param).style.fontWeight = 'bold';
-			}
-		</script>
-	</body>
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-start;
+		}
+		
+		.container > * {
+			margin: 0 1em 1em 0;
+		}
+		
+		input {
+			max-width: 4em;
+		}
+	</style>
+</head>
+<body>
+	<h3>Inferencia binomial</h3>
+	<section class="container">
+		<table>
+			<tr><td>Éxitos</td></tr>
+			<tr><td><input id="successes" type="number" value="0"></td></tr>
+		</table>
+		<table>
+			<tr><td>Fallos</td></tr>
+			<tr><td><input id="failures" type="number" value="0"></td></tr>
+		</table>
+	</section>
+	<section class="container">
+		<table id="estimationTable">
+			<tr><td>Estimación</td></tr>
+			<tr><td><span id="estimation"></span>%</td></tr>
+		</table>
+		<table id="greaterTable">
+			<tr><td>Mayor que</td></tr>
+			<tr><td><span id="greater"></span>%</td></tr>
+			<tr><td>(al 95%)</td></tr>
+		</table>
+		<table id="lesserTable">
+			<tr><td>Menor que</td></tr>
+			<tr><td><span id="lesser"></span>%</td></tr>
+			<tr><td>(al 95%)</td></tr>
+		</table>
+	</section>
+	<div id="chart"></div>
+</body>
 </html>
