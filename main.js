@@ -26,7 +26,7 @@ function update() {
 	for (let i = 0; i < 501; i++)
 		yPoints[i] = distribution.pdf(i * .002);
 	
-	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}], {xaxis: {range: [0, 100]}});
+	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}]);
 	
 	localStorage.setItem("successes", successes.value);
 	localStorage.setItem("failures", failures.value);
