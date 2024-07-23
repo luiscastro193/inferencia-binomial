@@ -1,5 +1,5 @@
 "use strict";
-import beta from 'https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta/+esm';
+import Beta from 'https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta-ctor/+esm';
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
@@ -18,7 +18,7 @@ for (let i = 0; i < 501; i++)
 	xPoints[i] = i * .2;
 
 function update() {
-	let distribution = new beta.Beta(Number(successes.value) + .5, Number(failures.value) + .5);
+	let distribution = new Beta(Number(successes.value) + .5, Number(failures.value) + .5);
 	estimation.textContent = (distribution.mean * 100).toFixed();
 	greater.textContent = (distribution.quantile(.05) * 100).toFixed();
 	lesser.textContent = (distribution.quantile(.95) * 100).toFixed();
