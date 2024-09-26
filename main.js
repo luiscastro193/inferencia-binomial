@@ -18,8 +18,8 @@ for (let i = 0; i < 501; i++)
 	xPoints[i] = i * .2;
 
 function update() {
-	let alpha = Number(successes.value) + .5;
-	let beta = Number(failures.value) + .5;
+	let alpha = successes.valueAsNumber + .5;
+	let beta = failures.valueAsNumber + .5;
 	
 	estimation.textContent = (betaDist.mean(alpha, beta) * 100).toFixed();
 	greater.textContent = (betaDist.quantile(.05, alpha, beta) * 100).toFixed();
@@ -45,11 +45,11 @@ document.addEventListener('keydown', function(event) {
 		else successes.select();
 	}
 	else if (event.key == 'ArrowUp' && !isInputActive) {
-		successes.value = Number(successes.value) + 1;
+		successes.valueAsNumber = successes.valueAsNumber + 1;
 		update();
 	}
 	else if (event.key == 'ArrowDown' && !isInputActive) {
-		failures.value = Number(failures.value) + 1;
+		failures.valueAsNumber = failures.valueAsNumber + 1;
 		update();
 	}
 });
