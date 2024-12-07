@@ -1,5 +1,5 @@
 "use strict";
-import betaDist from 'https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta/+esm';
+import cephes from 'https://cdn.jsdelivr.net/npm/cephes/+esm';
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
@@ -10,23 +10,36 @@ const chart = document.getElementById("chart");
 
 let xPoints = new Array(501);
 let yPoints = new Array(501);
+let lastUpdate = 0;
 
 if (localStorage.getItem("successes")) successes.value = localStorage.getItem("successes");
 if (localStorage.getItem("failures")) failures.value = localStorage.getItem("failures");
 
-for (let i = 0; i < 501; i++)
-	xPoints[i] = i * .2;
+for (let i = 0; i < 1001; i++)
+	xPoints[i] = i * .1;
 
-function update() {
+function pdf(alpha, beta, x) {
+	return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1) / cephes.beta(alpha, beta);
+}
+
+function format(percentage) {
+	return (percentage * 100).toFixed();
+}
+
+async function update() {
+	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
+	await cephes.compiled;
+	if (updateId != lastUpdate) return;
+	
 	let alpha = successes.valueAsNumber + .5;
 	let beta = failures.valueAsNumber + .5;
 	
-	estimation.textContent = (betaDist.mean(alpha, beta) * 100).toFixed();
-	greater.textContent = (betaDist.quantile(.05, alpha, beta) * 100).toFixed();
-	lesser.textContent = (betaDist.quantile(.95, alpha, beta) * 100).toFixed();
+	estimation.textContent = format(alpha / (alpha + beta));
+	greater.textContent = format(cephes.incbi(alpha, beta, .05));
+	lesser.textContent = format(cephes.incbi(alpha, beta, .95));
 	
-	for (let i = 0; i < 501; i++)
-		yPoints[i] = betaDist.pdf(i * .002, alpha, beta);
+	for (let i = 0; i < 1001; i++)
+		yPoints[i] = pdf(alpha, beta, i * .001);
 	
 	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}]);
 	

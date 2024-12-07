@@ -1,0 +1,17 @@
+* {
+	font-family: 'Lexend', sans-serif;
+}
+
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.container > * {
+	margin: 0 1em 1em 0;
+}
+
+input {
+	max-width: 4em;
+}
