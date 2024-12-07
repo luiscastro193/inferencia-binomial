@@ -19,7 +19,7 @@ for (let i = 0; i < 1001; i++)
 	xPoints[i] = i * .1;
 
 function pdf(alpha, beta, x) {
-	return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1) / cephes.beta(alpha, beta);
+	return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1);
 }
 
 function format(percentage) {
