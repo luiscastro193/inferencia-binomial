@@ -18,8 +18,8 @@ if (localStorage.getItem("failures")) failures.value = localStorage.getItem("fai
 for (let i = 0; i < 1001; i++)
 	xPoints[i] = i * .1;
 
-function pdf(alpha, beta, x) {
-	return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1);
+function pdf(alpha, beta, x, factor) {
+	return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1) / factor;
 }
 
 function format(percentage) {
@@ -33,13 +33,14 @@ async function update() {
 	
 	const alpha = (successes.valueAsNumber || 0) + .5;
 	const beta = (failures.valueAsNumber || 0) + .5;
+	const factor = cephes.beta(alpha, beta);
 	
 	estimation.textContent = format(alpha / (alpha + beta));
 	greater.textContent = format(cephes.incbi(alpha, beta, .05));
 	lesser.textContent = format(cephes.incbi(alpha, beta, .95));
 	
 	for (let i = 0; i < 1001; i++)
-		yPoints[i] = pdf(alpha, beta, i * .001);
+		yPoints[i] = pdf(alpha, beta, i * .001, factor);
 	
 	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}]);
 	
