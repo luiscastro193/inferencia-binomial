@@ -31,8 +31,8 @@ async function update() {
 	await cephes.compiled;
 	if (updateId != lastUpdate) return;
 	
-	let alpha = successes.valueAsNumber + .5;
-	let beta = failures.valueAsNumber + .5;
+	const alpha = (successes.valueAsNumber || 0) + .5;
+	const beta = (failures.valueAsNumber || 0) + .5;
 	
 	estimation.textContent = format(alpha / (alpha + beta));
 	greater.textContent = format(cephes.incbi(alpha, beta, .05));
