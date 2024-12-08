@@ -1,5 +1,13 @@
 "use strict";
-import cephes from 'https://cdn.jsdelivr.net/npm/cephes/+esm';
+function waitForGlobal(name) {
+	return new Promise(resolve => {
+		if (window[name]) return resolve();
+		document.head.querySelector(`[data-id=${name}]`).addEventListener('load', resolve, {once: true});
+	});
+}
+
+const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes/+esm').then(module => module.default);
+const plotlyPromise = waitForGlobal("plotly");
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
@@ -26,8 +34,22 @@ function format(percentage) {
 	return (percentage * 100).toFixed();
 }
 
+async function draw(alpha, beta, factor, updateId) {
+	await plotlyPromise;
+	if (updateId != lastUpdate) return;
+	
+	for (let i = 0; i < 1001; i++)
+		yPoints[i] = pdf(alpha, beta, i * .001, factor);
+	
+	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}]);
+}
+
 async function update() {
+	localStorage.setItem("successes", successes.value);
+	localStorage.setItem("failures", failures.value);
+	
 	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
+	const cephes = await cephesPromise;
 	await cephes.compiled;
 	if (updateId != lastUpdate) return;
 	
@@ -39,13 +61,7 @@ async function update() {
 	greater.textContent = format(cephes.incbi(alpha, beta, .05));
 	lesser.textContent = format(cephes.incbi(alpha, beta, .95));
 	
-	for (let i = 0; i < 1001; i++)
-		yPoints[i] = pdf(alpha, beta, i * .001, factor);
-	
-	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}]);
-	
-	localStorage.setItem("successes", successes.value);
-	localStorage.setItem("failures", failures.value);
+	draw(alpha, beta, factor, updateId);
 }
 
 document.querySelectorAll('input').forEach(input => input.addEventListener('input', update));
