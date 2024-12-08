@@ -7,7 +7,7 @@ function waitForGlobal(name) {
 }
 
 const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes/+esm').then(module => module.default);
-const plotlyPromise = waitForGlobal("plotly");
+const plotlyPromise = waitForGlobal("Plotly");
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
