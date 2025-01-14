@@ -16,8 +16,8 @@ const greater = document.getElementById("greater");
 const lesser = document.getElementById("lesser");
 const chart = document.getElementById("chart");
 
-let xPoints = new Array(501);
-let yPoints = new Array(501);
+let xPoints = new Array(1001);
+let yPoints = new Array(1001);
 let lastUpdate = 0;
 
 if (localStorage.getItem("successes")) successes.value = localStorage.getItem("successes");
@@ -41,7 +41,7 @@ async function draw(alpha, beta, factor, updateId) {
 	for (let i = 0; i < 1001; i++)
 		yPoints[i] = pdf(alpha, beta, i * .001, factor);
 	
-	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines'}]);
+	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines', line: {shape: 'spline'}}]);
 }
 
 async function update() {
