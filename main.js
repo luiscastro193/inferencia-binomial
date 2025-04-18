@@ -1,4 +1,5 @@
 "use strict";
+
 function waitForGlobal(name) {
 	return new Promise(resolve => {
 		if (window[name]) return resolve();
