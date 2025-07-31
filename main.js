@@ -1,4 +1,8 @@
 "use strict";
+const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes/+esm').then(async module => {
+	await module.default.compiled;
+	return module.default;
+});
 
 function waitForGlobal(name) {
 	return new Promise(resolve => {
@@ -7,7 +11,6 @@ function waitForGlobal(name) {
 	});
 }
 
-const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes/+esm').then(module => module.default);
 const plotlyPromise = waitForGlobal("Plotly");
 
 const successes = document.getElementById("successes");
@@ -51,7 +54,6 @@ async function update() {
 	
 	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
 	const cephes = await cephesPromise;
-	await cephes.compiled;
 	if (updateId != lastUpdate) return;
 	
 	const alpha = (successes.valueAsNumber || 0) + .5;
