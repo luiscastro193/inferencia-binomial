@@ -4,14 +4,7 @@ const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes/+esm').then(as
 	return module.default;
 });
 
-function waitForGlobal(name) {
-	return new Promise(resolve => {
-		if (window[name]) return resolve();
-		document.head.querySelector(`[data-id=${name}]`).addEventListener('load', resolve);
-	});
-}
-
-const plotlyPromise = waitForGlobal("Plotly");
+const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js');
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
