@@ -1,5 +1,5 @@
 "use strict";
-const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes/+esm').then(async module => {
+const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes@2/+esm').then(async module => {
 	await module.default.compiled;
 	return module.default;
 });
