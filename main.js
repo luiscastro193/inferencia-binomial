@@ -1,9 +1,5 @@
 "use strict";
-const cephesPromise = import('https://cdn.jsdelivr.net/npm/cephes@2/+esm').then(async module => {
-	await module.default.compiled;
-	return module.default;
-});
-
+const BetaPromise = import('https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta/+esm').then(module => module.default);
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js');
 
 const successes = document.getElementById("successes");
@@ -23,20 +19,16 @@ if (localStorage.getItem("failures")) failures.value = localStorage.getItem("fai
 for (let i = 0; i < 1001; i++)
 	xPoints[i] = i * .1;
 
-function pdf(alpha, beta, x, factor) {
-	return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1) / factor;
-}
-
 function format(percentage) {
 	return (percentage * 100).toFixed();
 }
 
-async function draw(alpha, beta, factor, updateId) {
+async function draw(pdf, updateId) {
 	await plotlyPromise;
 	if (updateId != lastUpdate) return;
 	
 	for (let i = 0; i < 1001; i++)
-		yPoints[i] = pdf(alpha, beta, i * .001, factor);
+		yPoints[i] = pdf(i * .001);
 	
 	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines', line: {shape: 'spline'}}]);
 }
@@ -46,18 +38,19 @@ async function update() {
 	localStorage.setItem("failures", failures.value);
 	
 	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
-	const cephes = await cephesPromise;
+	const Beta = await BetaPromise;
 	if (updateId != lastUpdate) return;
 	
 	const alpha = (successes.valueAsNumber || 0) + .5;
 	const beta = (failures.valueAsNumber || 0) + .5;
-	const factor = cephes.beta(alpha, beta);
+	const quantile = Beta.quantile.factory(alpha, beta);
+	const pdf = Beta.pdf.factory(alpha, beta);
 	
 	estimation.textContent = format(alpha / (alpha + beta));
-	greater.textContent = format(cephes.incbi(alpha, beta, .05));
-	lesser.textContent = format(cephes.incbi(alpha, beta, .95));
+	greater.textContent = format(quantile(.05));
+	lesser.textContent = format(quantile(.95));
 	
-	draw(alpha, beta, factor, updateId);
+	draw(pdf, updateId);
 }
 
 document.querySelectorAll('input').forEach(input => input.addEventListener('input', update));
