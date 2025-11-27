@@ -1,5 +1,5 @@
 "use strict";
-const BetaPromise = import('https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta/+esm').then(module => module.default);
+const betaDistPromise = import('https://cdn.jsdelivr.net/npm/@stdlib/stats-base-dists-beta/+esm').then(module => module.default);
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js');
 
 const successes = document.getElementById("successes");
@@ -38,13 +38,13 @@ async function update() {
 	localStorage.setItem("failures", failures.value);
 	
 	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
-	const Beta = await BetaPromise;
+	const betaDist = await betaDistPromise;
 	if (updateId != lastUpdate) return;
 	
 	const alpha = (successes.valueAsNumber || 0) + .5;
 	const beta = (failures.valueAsNumber || 0) + .5;
-	const quantile = Beta.quantile.factory(alpha, beta);
-	const pdf = Beta.pdf.factory(alpha, beta);
+	const quantile = betaDist.quantile.factory(alpha, beta);
+	const pdf = betaDist.pdf.factory(alpha, beta);
 	
 	estimation.textContent = format(alpha / (alpha + beta));
 	greater.textContent = format(quantile(.05));
