@@ -1,6 +1,5 @@
 "use strict";
-const quantilePromise = import('https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-dists-beta-quantile@esm/index.mjs').then(module => module.factory);
-const pdfPromise = import('https://cdn.jsdelivr.net/gh/stdlib-js/stats-base-dists-beta-pdf@esm/index.mjs').then(module => module.factory);
+const betaPromise = import('./beta.js').then(module => module.default());
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js');
 
 const successes = document.getElementById("successes");
@@ -10,15 +9,13 @@ const greater = document.getElementById("greater");
 const lesser = document.getElementById("lesser");
 const chart = document.getElementById("chart");
 
-let xPoints = new Array(1001);
-let yPoints = new Array(1001);
+let xPoints = new Array(10001);
+let yPoints = new Array(10001);
+for (let i = 0; i < 10001; i++) xPoints[i] = i * .01;
 let lastUpdate = 0;
 
 if (localStorage.getItem("successes")) successes.value = localStorage.getItem("successes");
 if (localStorage.getItem("failures")) failures.value = localStorage.getItem("failures");
-
-for (let i = 0; i < 1001; i++)
-	xPoints[i] = i * .1;
 
 function format(percentage) {
 	return (percentage * 100).toFixed();
@@ -27,10 +24,7 @@ function format(percentage) {
 async function draw(pdf, updateId) {
 	await plotlyPromise;
 	if (updateId != lastUpdate) return;
-	
-	for (let i = 0; i < 1001; i++)
-		yPoints[i] = pdf(i * .001);
-	
+	for (let i = 0; i < 10001; i++) yPoints[i] = pdf(i * .0001);
 	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines', line: {shape: 'spline'}}]);
 }
 
@@ -39,19 +33,18 @@ async function update() {
 	localStorage.setItem("failures", failures.value);
 	
 	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
-	const [betaQuantile, betaPdf] = await Promise.all([quantilePromise, pdfPromise]);
+	const betaDist = await betaPromise;
 	if (updateId != lastUpdate) return;
 	
 	const alpha = (successes.valueAsNumber || 0) + .5;
 	const beta = (failures.valueAsNumber || 0) + .5;
-	const quantile = betaQuantile(alpha, beta);
-	const pdf = betaPdf(alpha, beta);
+	betaDist._set_params(alpha, beta);
 	
 	estimation.textContent = format(alpha / (alpha + beta));
-	greater.textContent = format(quantile(.05));
-	lesser.textContent = format(quantile(.95));
+	greater.textContent = format(betaDist._quantile(.05));
+	lesser.textContent = format(betaDist._quantile(.95));
 	
-	draw(pdf, updateId);
+	draw(betaDist._pdf, updateId);
 }
 
 document.querySelectorAll('input').forEach(input => input.addEventListener('input', update));
