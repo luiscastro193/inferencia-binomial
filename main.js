@@ -9,9 +9,9 @@ const greater = document.getElementById("greater");
 const lesser = document.getElementById("lesser");
 const chart = document.getElementById("chart");
 
-let xPoints = new Array(10001);
-let yPoints = new Array(10001);
-for (let i = 0; i < 10001; i++) xPoints[i] = i * .01;
+let xPoints = new Array(1001);
+let yPoints = new Array(1001);
+for (let i = 0; i < 1001; i++) xPoints[i] = i * .1;
 let lastUpdate = 0;
 
 if (localStorage.getItem("successes")) successes.value = localStorage.getItem("successes");
@@ -24,7 +24,7 @@ function format(percentage) {
 async function draw(pdf, updateId) {
 	await plotlyPromise;
 	if (updateId != lastUpdate) return;
-	for (let i = 0; i < 10001; i++) yPoints[i] = pdf(i * .0001);
+	for (let i = 0; i < 1001; i++) yPoints[i] = pdf(i * .001);
 	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines', line: {shape: 'spline'}}]);
 }
 
