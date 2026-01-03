@@ -12,16 +12,22 @@ using wasm_policy = policies::policy<
 
 using beta = boost::math::beta_distribution<double, wasm_policy>;
 
-static beta distribution(.5, .5);
+constexpr int PDF_DENSITY = 2000;
+constexpr int PDF_N = PDF_DENSITY + 1;
+constexpr double PDF_STEP = 1.0 / PDF_DENSITY;
+
+static beta distribution;
+static double pdfs[PDF_N];
 
 extern "C" void set_params(double a, double b) {
 	distribution = beta(a, b);
+	for (int i = 0; i < PDF_N; ++i) pdfs[i] = boost::math::pdf(distribution, i * PDF_STEP);
 }
 
 extern "C" double quantile(double p) {
 	return boost::math::quantile(distribution, p);
 }
 
-extern "C" double pdf(double x) {
-	return boost::math::pdf(distribution, x);
+extern "C" double* pdfs_pointer() {
+	return pdfs;
 }

@@ -2,6 +2,10 @@
 const betaPromise = import('./beta.js').then(module => module.default());
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js');
 
+const PDF_DENSITY = 2000;
+const PDF_N = PDF_DENSITY + 1;
+const PDF_STEP = 100 / PDF_DENSITY;
+
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
 const estimation = document.getElementById("estimation");
@@ -9,10 +13,8 @@ const greater = document.getElementById("greater");
 const lesser = document.getElementById("lesser");
 const chart = document.getElementById("chart");
 
-let xPoints = new Array(1001);
-let yPoints = new Array(1001);
-for (let i = 0; i < 1001; i++) xPoints[i] = i * .1;
-let lastUpdate = 0;
+const xPoints = Array.from({length: PDF_N}, (_, i) => i * PDF_STEP);
+const yPointsPromise = betaPromise.then(betaDist => new Float64Array(betaDist.wasmMemory.buffer, betaDist._pdfs_pointer(), PDF_N));
 
 if (localStorage.getItem("successes")) successes.value = localStorage.getItem("successes");
 if (localStorage.getItem("failures")) failures.value = localStorage.getItem("failures");
@@ -21,10 +23,12 @@ function format(percentage) {
 	return (percentage * 100).toFixed();
 }
 
-async function draw(pdf, updateId) {
+let lastUpdate = 0;
+
+async function draw(updateId) {
 	await plotlyPromise;
+	const yPoints = await yPointsPromise;
 	if (updateId != lastUpdate) return;
-	for (let i = 0; i < 1001; i++) yPoints[i] = pdf(i * .001);
 	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines', line: {shape: 'spline'}}]);
 }
 
@@ -44,7 +48,7 @@ async function update() {
 	greater.textContent = format(betaDist._quantile(.05));
 	lesser.textContent = format(betaDist._quantile(.95));
 	
-	draw(betaDist._pdf, updateId);
+	draw(updateId);
 }
 
 document.querySelectorAll('input').forEach(input => input.addEventListener('input', update));
