@@ -12,7 +12,7 @@ using wasm_policy = policies::policy<
 
 using beta = boost::math::beta_distribution<double, wasm_policy>;
 
-constexpr int PDF_DENSITY = 2000;
+constexpr int PDF_DENSITY = 10000;
 constexpr int PDF_N = PDF_DENSITY + 1;
 constexpr double PDF_STEP = 1.0 / PDF_DENSITY;
 

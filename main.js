@@ -1,10 +1,14 @@
 "use strict";
 const betaPromise = import('./beta.js').then(module => module.default());
-const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js');
+const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => {
+	Plotly.newPlot(chart, [{x: Array.from({length: PDF_N}, (_, i) => i * PDF_STEP), y: await yPointsPromise}]);
+});
 
-const PDF_DENSITY = 2000;
+const PDF_DENSITY = 10000;
 const PDF_N = PDF_DENSITY + 1;
 const PDF_STEP = 100 / PDF_DENSITY;
+
+const yPointsPromise = betaPromise.then(betaDist => new Float64Array(betaDist.wasmMemory.buffer, betaDist._pdfs_pointer(), PDF_N));
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
@@ -12,9 +16,6 @@ const estimation = document.getElementById("estimation");
 const greater = document.getElementById("greater");
 const lesser = document.getElementById("lesser");
 const chart = document.getElementById("chart");
-
-const xPoints = Array.from({length: PDF_N}, (_, i) => i * PDF_STEP);
-const yPointsPromise = betaPromise.then(betaDist => new Float64Array(betaDist.wasmMemory.buffer, betaDist._pdfs_pointer(), PDF_N));
 
 if (localStorage.getItem("successes")) successes.value = localStorage.getItem("successes");
 if (localStorage.getItem("failures")) failures.value = localStorage.getItem("failures");
@@ -29,7 +30,7 @@ async function draw(updateId) {
 	await plotlyPromise;
 	const yPoints = await yPointsPromise;
 	if (updateId != lastUpdate) return;
-	Plotly.newPlot(chart, [{x: xPoints, y: yPoints, mode: 'lines', line: {shape: 'spline'}}]);
+	Plotly.restyle(chart, {y: yPoints});
 }
 
 async function update() {
@@ -55,7 +56,7 @@ document.querySelectorAll('input').forEach(input => input.addEventListener('inpu
 update();
 
 document.addEventListener('keydown', function(event) {
-	let isInputActive = document.activeElement?.nodeName.toLowerCase() == 'input';
+	const isInputActive = document.activeElement?.nodeName.toLowerCase() == 'input';
 	
 	if (event.key == 'Enter') {
 		if (isInputActive) document.activeElement.blur();
@@ -76,9 +77,9 @@ function switchWeight(element) {
 	localStorage.setItem(element.id, element.style.fontWeight);
 }
 
-document.querySelectorAll('body > section:nth-of-type(2) > table').forEach(table => table.addEventListener('click', () => switchWeight(table)));
+document.querySelectorAll('table[id]').forEach(table => table.addEventListener('click', () => switchWeight(table)));
 
-for (let param in localStorage) {
+for (const param in localStorage) {
 	if (localStorage.getItem(param) == 'bold')
 		document.getElementById(param).style.fontWeight = 'bold';
 }
