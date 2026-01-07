@@ -1,8 +1,8 @@
 "use strict";
 const betaPromise = import('./beta.js').then(module => module.default());
-const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => {
-	Plotly.newPlot(chart, [{x: Array.from({length: PDF_N}, (_, i) => i * PDF_STEP), y: await yPointsPromise}], undefined, {responsive: true});
-});
+const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
+		[{x: Array.from({length: PDF_N}, (_, i) => i * PDF_STEP), y: await yPointsPromise, line: {shape: 'spline'}}], undefined, {responsive: true}
+));
 
 const PDF_DENSITY = 10000;
 const PDF_N = PDF_DENSITY + 1;
