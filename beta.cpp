@@ -3,9 +3,13 @@
 
 namespace policies = boost::math::policies;
 
+template <class T> T policies::user_overflow_error(const char* function, const char* message, const T& val) {
+	return std::numeric_limits<T>::quiet_NaN();
+}
+
 using wasm_policy = policies::policy<
 	policies::domain_error<policies::ignore_error>,
-	policies::overflow_error<policies::ignore_error>,
+	policies::overflow_error<policies::user_error>,
 	policies::underflow_error<policies::ignore_error>,
 	policies::evaluation_error<policies::ignore_error>
 >;
