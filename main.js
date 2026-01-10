@@ -1,7 +1,7 @@
 "use strict";
 const betaPromise = import('./beta.js').then(module => module.default());
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
-		[{dx: 100 / PDF_DENSITY, y: await yPointsPromise, type: 'scattergl'}], undefined, {responsive: true}
+		[{dx: 100 / PDF_DENSITY, y: await yPointsPromise, line: {simplify: false}}], undefined, {responsive: true}
 ));
 
 const PDF_DENSITY = 10000;
