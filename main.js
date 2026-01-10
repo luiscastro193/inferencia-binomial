@@ -5,9 +5,7 @@ const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/pl
 ));
 
 const PDF_DENSITY = 10000;
-const PDF_N = PDF_DENSITY + 1;
-
-const yPointsPromise = betaPromise.then(betaDist => new Float64Array(betaDist.wasmMemory.buffer, betaDist._pdfs_pointer(), PDF_N));
+const yPointsPromise = betaPromise.then(beta => new Float64Array(beta.wasmMemory.buffer, beta._pdfs_pointer(), PDF_DENSITY + 1));
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
