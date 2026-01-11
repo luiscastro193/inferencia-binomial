@@ -40,13 +40,11 @@ async function update() {
 	
 	const alpha = (successes.valueAsNumber || 0) + .5;
 	const beta = (failures.valueAsNumber || 0) + .5;
-	const now = performance.now();
 	betaDist._set_params(alpha, beta);
 	
 	estimation.textContent = format(alpha / (alpha + beta));
 	greater.textContent = format(betaDist._quantile(.05));
 	lesser.textContent = format(betaDist._quantile(.95));
-	console.log(performance.now() - now);
 	
 	draw(updateId);
 }
