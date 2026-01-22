@@ -1,3 +1,6 @@
+#include <emscripten/emscripten.h>
+#define CAPI extern "C" EMSCRIPTEN_KEEPALIVE
+
 #include <boost/math/distributions/beta.hpp>
 #include <boost/math/policies/policy.hpp>
 
@@ -19,15 +22,15 @@ constexpr double PDF_STEP = 1.0 / PDF_DENSITY;
 static beta distribution;
 static double pdfs[PDF_N];
 
-extern "C" void set_params(double a, double b) {
+CAPI void set_params(double a, double b) {
 	distribution = beta(a, b);
 	for (int i = 0; i < PDF_N; ++i) pdfs[i] = boost::math::pdf(distribution, i * PDF_STEP);
 }
 
-extern "C" double quantile(double p) {
+CAPI double quantile(double p) {
 	return boost::math::quantile(distribution, p);
 }
 
-extern "C" double* pdfs_pointer() {
+CAPI double* pdfs_pointer() {
 	return pdfs;
 }
