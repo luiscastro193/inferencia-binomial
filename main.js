@@ -1,5 +1,5 @@
 "use strict";
-const wasmError = new Promise((_, reject) => {addEventListener("unhandledrejection", error => {
+const wasmError = new Promise((_, reject) => {addEventListener('unhandledrejection', error => {
 		if (error.reason instanceof WebAssembly.CompileError) reject(error.reason);
 });});
 const importModule = path => import(path).then(module => module.default());
