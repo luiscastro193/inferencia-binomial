@@ -1,5 +1,9 @@
 "use strict";
-const betaPromise = import('./beta.js').then(module => module.default());
+const wasmError = new Promise((_, reject) => {addEventListener("unhandledrejection", error => {
+		if (error.reason instanceof WebAssembly.CompileError) reject(error.reason);
+});});
+const importModule = path => import(path).then(module => module.default());
+const betaPromise = Promise.race([importModule('./beta.js'), wasmError]).catch(() => importModule('./beta-safe.js'));
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
 		[{dx: 100 / PDF_DENSITY, y: await yPointsPromise, line: {simplify: false}}],
 		{xaxis: {range: [0, 100]}, yaxis: {rangemode: "tozero"}},
