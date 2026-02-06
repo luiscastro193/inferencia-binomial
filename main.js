@@ -37,7 +37,7 @@ async function update() {
 	localStorage.setItem("successes", successes.value);
 	localStorage.setItem("failures", failures.value);
 	
-	const updateId = lastUpdate = (lastUpdate + 1) % Number.MAX_SAFE_INTEGER;
+	const updateId = ++lastUpdate;
 	const betaDist = await betaPromise;
 	if (updateId != lastUpdate) return;
 	
