@@ -1,6 +1,5 @@
 "use strict";
-const relaxedSIMD = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,15,1,13,0,65,1,253,15,65,2,253,15,253,128,2,11]));
-const betaPromise = import(relaxedSIMD ? './beta.js' : './beta-safe.js').then(module => module.default());
+const betaPromise = import('./beta.js').then(module => module.default());
 const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
 		[{dx: 100 / PDF_DENSITY, y: await yPointsPromise, line: {simplify: false}}],
 		{xaxis: {range: [0, 100]}, yaxis: {rangemode: "tozero"}},

@@ -3,12 +3,19 @@ COMMON=(
 	beta.cpp -Ivendor
 	-Oz -flto -fno-exceptions -fno-rtti -DNDEBUG
 	-mtail-call -msimd128 -mavx2
-	-sENVIRONMENT=web -sEXPORT_ES6=1 -sSINGLE_FILE=1 --no-entry
+	-sENVIRONMENT=web -sEXPORT_ES6=1 --no-entry
 	-sSTRICT=1 -sJS_MATH=1 -sEVAL_CTORS=2
-	--closure 1 -sMINIMAL_RUNTIME=1 -sEXPORT_KEEPALIVE=1
+	--closure 1 -sEXPORT_KEEPALIVE=1
+	-sMINIMAL_RUNTIME=1 -sMINIMAL_RUNTIME_STREAMING_WASM_INSTANTIATION=1
 	-sINITIAL_HEAP=0 -sMALLOC=none
 	-sEXPORTED_RUNTIME_METHODS=wasmMemory
 )
 
 em++ "${COMMON[@]}" -mrelaxed-simd -o beta.js
 em++ "${COMMON[@]}" -o beta-safe.js
+
+rm beta-safe.js
+perl -pi -e '
+	$_="let safe=WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,15,1,13,0,65,1,253,15,65,2,253,15,253,128,2,11]));\n$_" if $.==1;
+	s|"beta.wasm"|`beta\${safe?"":"-safe"}.wasm`|g
+' beta.js
