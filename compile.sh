@@ -18,7 +18,7 @@ rm beta-safe.js
 perl -0777 -pi -e '
 	my $arg;
 	s|"beta.wasm"|`beta\${safe?"":"-safe"}.wasm`|g;
-	s|fetch\((new URL\([^)]+\))\)|$arg = $1; "request"|e;
-	my $safe_val = "let safe=WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,15,1,13,0,65,1,253,15,65,2,253,15,253,128,2,11]));";
-	$_ = qq{$safe_val\nlet request=fetch($arg);\n$_};
+	s|fetch\((new URL\([^)]+\))\)|$arg = $1; "req"|e;
+	my $safe_eval = "let safe=WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,15,1,13,0,65,1,253,15,65,2,253,15,253,128,2,11]));";
+	$_ = qq{$safe_eval\nlet req=fetch($arg);\n$_};
 ' beta.js

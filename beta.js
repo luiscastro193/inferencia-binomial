@@ -1,5 +1,5 @@
 let safe=WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,15,1,13,0,65,1,253,15,65,2,253,15,253,128,2,11]));
-let request=fetch(new URL(`beta${safe?"":"-safe"}.wasm`,import.meta.url));
+let req=fetch(new URL(`beta${safe?"":"-safe"}.wasm`,import.meta.url));
 async function Module(moduleArg={}){var moduleRtn;var b=moduleArg,c,e=!1,f={},g,h,l={a:{h:()=>{throw"";},g:()=>{},i:(a,d)=>{f[a]&&(clearTimeout(f[a].id),delete f[a]);if(!d)return 0;var k=setTimeout(()=>{delete f[a];g(a,performance.now())},d);f[a]={id:k,s:d};return 0},j:Math.acos,f:Math.asin,e:Math.cos,b:Math.exp,a:Math.log,c:Math.pow,d:Math.sin,k:a=>{throw`exit(${a})`;}}};
-WebAssembly.instantiateStreaming(request,l).then(a=>{a=a.instance.exports;b._set_params=a.m;b._quantile=a.n;b._pdfs_pointer=a.o;g=a.p;h=b.wasmMemory=a.l;a=h.buffer;new Int8Array(a);new Int16Array(a);new Uint8Array(a);new Uint16Array(a);new Int32Array(a);new Uint32Array(a);new Float32Array(a);new Float64Array(a);new BigInt64Array(a);new BigUint64Array(a);e=!0;c?.(b)});e?moduleRtn=b:moduleRtn=new Promise(a=>{c=a});
+WebAssembly.instantiateStreaming(req,l).then(a=>{a=a.instance.exports;b._set_params=a.m;b._quantile=a.n;b._pdfs_pointer=a.o;g=a.p;h=b.wasmMemory=a.l;a=h.buffer;new Int8Array(a);new Int16Array(a);new Uint8Array(a);new Uint16Array(a);new Int32Array(a);new Uint32Array(a);new Float32Array(a);new Float64Array(a);new BigInt64Array(a);new BigUint64Array(a);e=!0;c?.(b)});e?moduleRtn=b:moduleRtn=new Promise(a=>{c=a});
 ;return moduleRtn}export default Module;
