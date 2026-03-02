@@ -1,7 +1,7 @@
 #!/bin/bash
 COMMON=(
 	beta.cpp -Ivendor
-	-Oz -flto -fno-exceptions -fno-rtti -DNDEBUG
+	-Os -flto -fno-exceptions -fno-rtti -DNDEBUG
 	-mtail-call -msimd128 -mavx2
 	-sENVIRONMENT=web -sEXPORT_ES6=1 --no-entry
 	-sSTRICT=1 -sJS_MATH=1 -sEVAL_CTORS=2
