@@ -1,13 +1,13 @@
 "use strict";
 const betaPromise = import('./beta.js').then(module => module.default());
 import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
-		[{dx: 100 / PDF_DENSITY, y: await yPointsPromise, line: {simplify: false}}],
+		[{dx: 100 / PDF_DENSITY, y: await yPoints, line: {simplify: false}}],
 		{xaxis: {range: [0, 100]}, yaxis: {rangemode: "tozero"}},
 		{responsive: true}
 ));
 
 const PDF_DENSITY = 10000;
-const yPointsPromise = betaPromise.then(beta => new Float64Array(beta.wasmMemory.buffer, beta._pdfs_pointer(), PDF_DENSITY + 1));
+const yPoints = betaPromise.then(beta => new Float64Array(beta.wasmMemory.buffer, beta._pdfs_pointer(), PDF_DENSITY + 1));
 
 const successes = document.getElementById("successes");
 const failures = document.getElementById("failures");
@@ -25,7 +25,7 @@ function format(percentage) {
 
 async function draw() {
 	if (!chart.data) return;
-	Plotly.restyle(chart, {y: await yPointsPromise});
+	Plotly.restyle(chart, {y: await yPoints});
 }
 
 let lastUpdate = 0;
