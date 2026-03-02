@@ -1,6 +1,6 @@
 "use strict";
 const betaPromise = import('./beta.js').then(module => module.default());
-const plotlyPromise = import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
+import('https://cdn.jsdelivr.net/npm/plotly.js-dist-min/plotly.min.js').then(async () => Plotly.newPlot(chart,
 		[{dx: 100 / PDF_DENSITY, y: await yPointsPromise, line: {simplify: false}}],
 		{xaxis: {range: [0, 100]}, yaxis: {rangemode: "tozero"}},
 		{responsive: true}
@@ -23,14 +23,12 @@ function format(percentage) {
 	return (percentage * 100).toFixed();
 }
 
-let lastUpdate = 0;
-
-async function draw(updateId) {
-	await plotlyPromise;
-	const yPoints = await yPointsPromise;
-	if (updateId != lastUpdate) return;
-	Plotly.restyle(chart, {y: yPoints});
+async function draw() {
+	if (!chart.data) return;
+	Plotly.restyle(chart, {y: await yPointsPromise});
 }
+
+let lastUpdate = 0;
 
 async function update() {
 	localStorage.setItem("successes", successes.value);
@@ -48,7 +46,7 @@ async function update() {
 	greater.textContent = format(betaDist._quantile(.05));
 	lesser.textContent = format(betaDist._quantile(.95));
 	
-	draw(updateId);
+	draw();
 }
 
 document.querySelectorAll('input').forEach(input => input.addEventListener('input', update));
