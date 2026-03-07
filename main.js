@@ -28,7 +28,7 @@ async function draw(updateId) {
 		await plotlyPromise;
 		if (updateId != lastUpdate) return;
 		Plotly.newPlot(chart,
-			[{dx: 100 / PDF_DENSITY, y: await yPoints, fill: 'tozeroy', mode: 'none'}],
+			[{dx: 100 / PDF_DENSITY, y: await yPoints, line: {simplify: false}, fill: 'tozeroy', mode: 'none'}],
 			{xaxis: {range: [0, 100]}, yaxis: {rangemode: "tozero"}},
 			{responsive: true}
 		);
